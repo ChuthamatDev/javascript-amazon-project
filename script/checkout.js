@@ -102,8 +102,8 @@ document.querySelectorAll(".js-delete-link").forEach((link) => {
     removeFromCart(productId);
 
     const contianer = document.querySelector(
-      `.js-cart-item-contianer-${productId}`
+      `.js-cart-item-container-${productId}`
     );
+    contianer.remove();
   });
-  contianer.remove();
 });
