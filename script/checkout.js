@@ -4,10 +4,6 @@ import { formatCurrency } from "./utils/money.js";
 import dayjs from "https://unpkg.com/supersimpledev@8.5.0/dayjs/esm/index.js";
 import { deliveryOptions } from "../data/deliveryoptions.js";
 
-const today = dayjs();
-const deliveryDate = today.add(7, "days");
-console.log(deliveryDate.format("dddd, MMMM D"));
-
 let cartSummaryHTML = "";
 
 cart.forEach((cartItem) => {
@@ -85,6 +81,7 @@ cart.forEach((cartItem) => {
 
 function deliveryOptionsHTML(mathchingProduct, cartItem) {
   let html = "";
+
   deliveryOptions.forEach((deliveryOption) => {
     const today = dayjs();
     const deliveryDate = today.add(deliveryOption.deliveryDays, "days");
@@ -112,9 +109,9 @@ function deliveryOptionsHTML(mathchingProduct, cartItem) {
 			</div>
 		</div>
 	`;
-
-    console.log(html);
   });
+
+  return html;
 }
 
 document.querySelector(".js-order-summary").innerHTML = cartSummaryHTML;
