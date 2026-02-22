@@ -1,11 +1,22 @@
 import { cart, addTocart } from "../data/cart.js";
-import { products } from "../data/products.js";
+import { products, loadProductsFetch } from "../data/products.js";
 import { formatCurrency } from "./utils/money.js";
 
-let productsHTML = "";
+function updateQuantity() {
+  let cartQuantity = 0;
 
-products.forEach((product) => {
-  productsHTML += `
+  cart.forEach((cartItem) => {
+    cartQuantity += cartItem.quantity;
+  });
+
+  document.querySelector(".js-cart-quantity").innerHTML = cartQuantity;
+}
+
+function renderProductsGrid() {
+  let productsHTML = "";
+
+  products.forEach((product) => {
+    productsHTML += `
         <div class="product-container">
           <div class="product-image-container">
             <img
@@ -52,29 +63,33 @@ products.forEach((product) => {
             Added
           </div>
 
-          <button 
-            class="add-to-cart-button button-primary js-add-to-cart" 
+          <button
+            class="add-to-cart-button button-primary js-add-to-cart"
             data-product-id="${product.id}">Add to Cart</button>
         </div>
     `;
-});
-
-document.querySelector(".js-products-grid").innerHTML = productsHTML;
-
-function updateQuantity() {
-  let cartQuantity = 0;
-
-  cart.forEach((cartItem) => {
-    cartQuantity += cartItem.quantity;
   });
 
-  document.querySelector(".js-cart-quantity").innerHTML = cartQuantity;
+  document.querySelector(".js-products-grid").innerHTML = productsHTML;
 }
 
-document.querySelectorAll(".js-add-to-cart").forEach((button) => {
-  button.addEventListener("click", () => {
-    const productId = button.dataset.productId;
-    addTocart(productId);
-    updateQuantity();
+function setupAddToCartButtons() {
+  document.querySelectorAll(".js-add-to-cart").forEach((button) => {
+    button.addEventListener("click", () => {
+      const productId = button.dataset.productId;
+      addTocart(productId);
+      updateQuantity();
+    });
   });
-});
+}
+
+loadProductsFetch()
+  .then(() => {
+    renderProductsGrid();
+    setupAddToCartButtons();
+    updateQuantity();
+  })
+  .catch(() => {
+    document.querySelector(".js-products-grid").innerHTML =
+      "<p>Unable to load products.</p>";
+  });
